@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>My First Plugin</title>
+  </head>
+  <style>
+    body {
+      font-family: Verdana, Geneva, Tahoma, sans-serif;
+      background-color: var(--figma-color-bg);
+      color: var(--figma-color-text);
+    }
+    input {
+      padding: 6px 10px;
+      font-weight: 500;
+      border-radius: 6px;
+      border: 0;
+      background-color: var(--figma-color-bg-hover);
+      color: inherit;
+      transition: all 0.1s;
+    }
+    input:focus {
+      outline: 1.5px solid var(--figma-color-bg-brand);
+    }
+    button {
+      background-color: var(--figma-color-bg-brand);
+      border: 0;
+      padding: 6px 9px;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--figma-color-text);
+      border-radius: 6px;
+      transition: all 0.3s;
+    }
+    button:hover {
+      background-color: var(--figma-color-bg-brand-hover);
+    }
+    .plugin-ui-box {
+      display: grid;
+      gap: 8px;
+    }
+    label {
+      font-size: 12px;
+      display: block;
+      margin-bottom: 4px;
+    }
+    .input-box {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 8px;
+      align-items: center;
+    }
+    #button-create-shape {
+      justify-self: center;
+    }
+
+    select {
+      padding: 6px 10px;
+      font-weight: 500;
+      border-radius: 6px;
+      border: 0;
+      background-color: var(--figma-color-bg-hover);
+      color: inherit;
+      transition: all 0.1s;
+      appearance: none;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      outline: none;
+      cursor: pointer;
+    }
+    select:focus {
+      outline: 1.5px solid var(--figma-color-bg-brand);
+    }
+    option {
+      background-color: var(--figma-color-bg-hover);
+      color: var(--figma-color-text);
+      font-weight: 500;
+    }
+  </style>
+  <body>
+    <div class="plugin-ui-box">
+      <div class="input-box">
+        <label for="shape-number">Number of Shapes:</label>
+        <input
+          id="input-shape-number"
+          name="shape-number"
+          type="number"
+          min="1"
+          max="20"
+        />
+      </div>
+
+      <div class="input-box">
+        <label for="shape-type">Shape Type:</label>
+        <select id="input-shape-type" name="shape-type">
+          <option value="rectangle">Rectangle</option>
+          <option value="square">Square</option>
+          <option value="circle">Circle</option>
+          <option value="hexagon">Hexagon</option>
+          <option value="triangle">Triangle</option>
+        </select>
+      </div>
+      <div class="input-box" id="color-input-box">
+        <label>Shape Color (RGB):</label>
+        <div style="display: flex; gap: 8px;">
+          <input
+            id="input-color-r"
+            name="color-r"
+            type="number"
+            min="0"
+            max="1"
+            step="0.01"
+            placeholder="R"
+            style="width: 50px"
+          />
+          <input
+            id="input-color-g"
+            name="color-g"
+            type="number"
+            min="0"
+            max="1"
+            step="0.01"
+            placeholder="G"
+            style="width: 50px"
+          />
+          <input
+            id="input-color-b"
+            name="color-b"
+            type="number"
+            min="0"
+            max="1"
+            step="0.01"
+            placeholder="B"
+            style="width: 50px"
+          />
+        </div>
+      </div>
+      <script>
+        // Get color input elements
+        const colorR = document.getElementById("input-color-r");
+        const colorG = document.getElementById("input-color-g");
+        const colorB = document.getElementById("input-color-b");
+
+        // Set default values
+        colorR.value = 1;
+        colorG.value = 0.5;
+        colorB.value = 0;
+
+        // Helper to get color as {r, g, b}
+        function getColorValue() {
+          return {
+            r: Math.max(0, Math.min(1, parseFloat(colorR.value) || 0)),
+            g: Math.max(0, Math.min(1, parseFloat(colorG.value) || 0)),
+            b: Math.max(0, Math.min(1, parseFloat(colorB.value) || 0)),
+          };
+        }
+
+        // Patch the button event to include color
+        buttonCreateShape.addEventListener("click", (event) => {
+          // Remove previous listener if any
+          event.stopImmediatePropagation();
+          parent.postMessage(
+            {
+              pluginMessage: {
+                count: Number(shapeInput.value),
+                shape: shapeType.value,
+                color: getColorValue(),
+              },
+            },
+            "*"
+          );
+        }, { once: true });
+
+        // Re-add the event listener for subsequent clicks
+        buttonCreateShape.addEventListener("click", (event) => {
+          parent.postMessage(
+            {
+              pluginMessage: {
+                count: Number(shapeInput.value),
+                shape: shapeType.value,
+                color: getColorValue(),
+              },
+            },
+            "*"
+          );
+        });
+      </script>
+      <button id="button-create-shape">Create Shapes</button>
+    </div>
+    <script>
+      const shapeInput = document.getElementById("input-shape-number");
+      const buttonCreateShape = document.getElementById("button-create-shape");
+      const shapeType = document.getElementById("input-shape-type");
+
+      buttonCreateShape.addEventListener("click", (event) => {
+        console.log(event.target);
+        console.log("This method executed");
+        parent.postMessage(
+          {
+            pluginMessage: {
+              count: Number(shapeInput.value),
+              shape: shapeType.value,
+            },
+          },
+          "*"
+        );
+      });
+    </script>
+  </body>
+</html>

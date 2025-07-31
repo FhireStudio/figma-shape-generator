@@ -1,0 +1,9 @@
+{
+  "compilerOptions": {
+    "target": "es6",
+    "lib": ["es6"],
+    "strict": true,
+    "outDir": "./dist" /* Specify an output folder for all emitted files. */,
+    "typeRoots": ["./node_modules/@types", "./node_modules/@figma"]
+  }
+}
