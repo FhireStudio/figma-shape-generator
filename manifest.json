@@ -1,8 +1,8 @@
 {
-  "name": "My First Plugin",
+  "name": "Shape Generator",
   "id": "1532007639795614351",
   "api": "1.0.0",
-  "ui": "ui.html",
+  "ui": "src/ui.html",
   "main": "dist/code.js",
   "capabilities": [],
   "enableProposedApi": false,

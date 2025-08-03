@@ -104,7 +104,7 @@
       </div>
       <div class="input-box" id="color-input-box">
         <label>Shape Color (RGB):</label>
-        <div style="display: flex; gap: 8px;">
+        <div style="display: flex; gap: 8px">
           <input
             id="input-color-r"
             name="color-r"
@@ -137,56 +137,7 @@
           />
         </div>
       </div>
-      <script>
-        // Get color input elements
-        const colorR = document.getElementById("input-color-r");
-        const colorG = document.getElementById("input-color-g");
-        const colorB = document.getElementById("input-color-b");
 
-        // Set default values
-        colorR.value = 1;
-        colorG.value = 0.5;
-        colorB.value = 0;
-
-        // Helper to get color as {r, g, b}
-        function getColorValue() {
-          return {
-            r: Math.max(0, Math.min(1, parseFloat(colorR.value) || 0)),
-            g: Math.max(0, Math.min(1, parseFloat(colorG.value) || 0)),
-            b: Math.max(0, Math.min(1, parseFloat(colorB.value) || 0)),
-          };
-        }
-
-        // Patch the button event to include color
-        buttonCreateShape.addEventListener("click", (event) => {
-          // Remove previous listener if any
-          event.stopImmediatePropagation();
-          parent.postMessage(
-            {
-              pluginMessage: {
-                count: Number(shapeInput.value),
-                shape: shapeType.value,
-                color: getColorValue(),
-              },
-            },
-            "*"
-          );
-        }, { once: true });
-
-        // Re-add the event listener for subsequent clicks
-        buttonCreateShape.addEventListener("click", (event) => {
-          parent.postMessage(
-            {
-              pluginMessage: {
-                count: Number(shapeInput.value),
-                shape: shapeType.value,
-                color: getColorValue(),
-              },
-            },
-            "*"
-          );
-        });
-      </script>
       <button id="button-create-shape">Create Shapes</button>
     </div>
     <script>
@@ -194,19 +145,37 @@
       const buttonCreateShape = document.getElementById("button-create-shape");
       const shapeType = document.getElementById("input-shape-type");
 
-      buttonCreateShape.addEventListener("click", (event) => {
-        console.log(event.target);
-        console.log("This method executed");
+      const colorR = document.getElementById("input-color-r");
+      const colorG = document.getElementById("input-color-g");
+      const colorB = document.getElementById("input-color-b");
+
+      colorR.value = 1;
+      colorG.value = 0.5;
+      colorB.value = 0;
+
+      buttonCreateShape.addEventListener("click", handleShapeCreation);
+
+      function handleShapeCreation(event) {
+        event.stopImmediatePropagation();
         parent.postMessage(
           {
             pluginMessage: {
               count: Number(shapeInput.value),
               shape: shapeType.value,
+              color: getColorValue(),
             },
           },
           "*"
         );
-      });
+      }
+
+      function getColorValue() {
+        return {
+          r: Math.max(0, Math.min(1, parseFloat(colorR.value) || 0)),
+          g: Math.max(0, Math.min(1, parseFloat(colorG.value) || 0)),
+          b: Math.max(0, Math.min(1, parseFloat(colorB.value) || 0)),
+        };
+      }
     </script>
   </body>
 </html>

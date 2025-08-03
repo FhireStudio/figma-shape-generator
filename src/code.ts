@@ -18,7 +18,6 @@ function createShapes(
   shape: ShapeType = "rectangle",
   color: { r: number; g: number; b: number }
 ) {
-  console.log("Creating shapes");
   const nodes: SceneNode[] = [];
   for (let i = 0; i < n; i++) {
     let node: SceneNode;
@@ -28,21 +27,21 @@ function createShapes(
         break;
       case "square":
         node = figma.createRectangle();
-        (node as RectangleNode).resize(100, 100);
+        node.resize(100, 100);
         break;
       case "circle":
         node = figma.createEllipse();
-        (node as EllipseNode).resize(100, 100);
+        node.resize(100, 100);
         break;
       case "hexagon":
         node = figma.createPolygon();
-        (node as PolygonNode).pointCount = 6;
-        (node as PolygonNode).resize(100, 100);
+        node.pointCount = 6;
+        node.resize(100, 100);
         break;
       case "triangle":
         node = figma.createPolygon();
-        (node as PolygonNode).pointCount = 3;
-        (node as PolygonNode).resize(100, 100);
+        node.pointCount = 3;
+        node.resize(100, 100);
         break;
       default:
         node = figma.createRectangle();
